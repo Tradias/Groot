@@ -13,10 +13,11 @@
 #  For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 #
 
-find_package(ZeroMQ CONFIG REQUIRED)
-if(TARGET libzmq)
-  add_library(zmq ALIAS libzmq)
+find_package(cppzmq CONFIG REQUIRED)
+if(TARGET cppzmq)
+  add_library(zmq ALIAS cppzmq)
   set(ZMQ_FOUND TRUE)
+  set(ZMQ_LIBRARIES "cppzmq")
   return()
 endif()
 

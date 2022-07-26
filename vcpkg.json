@@ -1,0 +1,10 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/8e1f46de11423e5f7d2395458f5252738ffffbbd/scripts/vcpkg.schema.json",
+    "name": "groot",
+    "version-string": "1",
+    "dependencies": [
+        "cppzmq",
+        "qt5"
+    ],
+    "builtin-baseline": "8e1f46de11423e5f7d2395458f5252738ffffbbd"
+}

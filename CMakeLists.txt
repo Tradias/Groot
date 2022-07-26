@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.15)
 
 # Update the policy setting to avoid an error when loading the ament_cmake package
 # at the current cmake version level
@@ -6,7 +6,7 @@ if(POLICY CMP0057)
     cmake_policy(SET CMP0057 NEW)
 endif()
 
-project(groot)
+project(groot LANGUAGES CXX)
 
 find_package(Qt5 COMPONENTS  Core Widgets Gui OpenGL Xml Svg)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}  "${CMAKE_CURRENT_LIST_DIR}/cmake")
@@ -57,7 +57,6 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 add_definitions(${Qt5Widgets_DEFINITIONS} -DNODE_EDITOR_STATIC )
-set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 
 #set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
 #set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_STATIC_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
@@ -140,13 +139,10 @@ endif()
 
 QT5_WRAP_UI(FORMS_HEADERS ${FORMS_UI})
 
-add_library(behavior_tree_editor SHARED
+add_library(behavior_tree_editor STATIC
     ${APP_CPPS}
     ${FORMS_HEADERS}
 )
-set_target_properties(behavior_tree_editor PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
-include(GenerateExportHeader)
-generate_export_header(behavior_tree_editor)
 target_include_directories(behavior_tree_editor PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
 )
@@ -165,11 +161,11 @@ if( ZMQ_FOUND )
     SET(GROOT_DEPENDENCIES ${GROOT_DEPENDENCIES} zmq)
 endif()
 
-target_link_libraries(behavior_tree_editor ${GROOT_DEPENDENCIES} )
+target_link_libraries(behavior_tree_editor PRIVATE ${GROOT_DEPENDENCIES} PUBLIC Qt5::Widgets )
 
 
 add_executable(Groot ./bt_editor/main.cpp  ${RESOURCE_FILES})
-target_link_libraries(Groot behavior_tree_editor )
+target_link_libraries(Groot PRIVATE behavior_tree_editor )
 
 add_subdirectory(test)
 

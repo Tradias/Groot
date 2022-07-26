@@ -1,0 +1,129 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 15,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "main",
+            "displayName": "Main",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build",
+            "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "out",
+                "VCPKG_OVERLAY_TRIPLETS": "${sourceDir}/vcpkg/triplets/"
+            }
+        },
+        {
+            "name": "osx",
+            "displayName": "OSX Main",
+            "generator": "Unix Makefiles",
+            "inherits": [
+                "main"
+            ],
+            "condition": {
+                "type": "equals",
+                "lhs": "Darwin",
+                "rhs": "${hostSystemName}"
+            },
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "g++-11",
+                "VCPKG_TARGET_TRIPLET": "arm64-osx-gcc11-rel",
+                "VCPKG_HOST_TRIPLET": "arm64-osx-gcc11-rel",
+                "CMAKE_DISABLE_PRECOMPILE_HEADERS": true
+            }
+        },
+        {
+            "name": "msvc",
+            "displayName": "MSVC Main",
+            "inherits": [
+                "main"
+            ],
+            "condition": {
+                "type": "equals",
+                "lhs": "Windows",
+                "rhs": "${hostSystemName}"
+            },
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
+            "toolset": {
+                "value": "host=x64",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "cl",
+                "VCPKG_HOST_TRIPLET": "x64-windows-static-rel",
+                "VCPKG_TARGET_TRIPLET": "x64-windows-static-rel",
+                "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreaded$<$<CONFIG:Debug>:Debug>",
+                "Boost_USE_STATIC_RUNTIME": "TRUE"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "main-debug",
+            "displayName": "Main Debug",
+            "configurePreset": "main",
+            "configuration": "Debug"
+        },
+        {
+            "name": "main-release",
+            "displayName": "Main Release",
+            "configurePreset": "main",
+            "configuration": "Release"
+        },
+        {
+            "name": "osx-debug",
+            "displayName": "OSX Debug",
+            "configurePreset": "osx",
+            "inherits": [
+                "main-debug"
+            ]
+        },
+        {
+            "name": "osx-release",
+            "displayName": "OSX Release",
+            "configurePreset": "osx",
+            "inherits": [
+                "main-release"
+            ]
+        },
+        {
+            "name": "msvc-release",
+            "displayName": "MSVC Release",
+            "configurePreset": "msvc",
+            "inherits": [
+                "main-release"
+            ]
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "main-debug",
+            "displayName": "Main Debug",
+            "configurePreset": "main",
+            "configuration": "Debug",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "timeout": 200,
+                "jobs": 8
+            }
+        },
+        {
+            "name": "main-release",
+            "displayName": "Main Release",
+            "inherits": [
+                "main-debug"
+            ],
+            "configuration": "Release"
+        }
+    ]
+}
