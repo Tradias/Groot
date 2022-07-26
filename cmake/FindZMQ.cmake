@@ -14,10 +14,10 @@
 #
 
 find_package(cppzmq CONFIG REQUIRED)
-if(TARGET cppzmq)
-  add_library(zmq ALIAS cppzmq)
+if(TARGET cppzmq-static)
+  add_library(zmq ALIAS cppzmq-static)
   set(ZMQ_FOUND TRUE)
-  set(ZMQ_LIBRARIES "cppzmq")
+  set(ZMQ_LIBRARIES "cppzmq-static")
   return()
 endif()
 

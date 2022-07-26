@@ -20,7 +20,7 @@ endif()
 
 #############################################################
 find_package(ament_cmake QUIET)
-find_package(ament_index_cpp REQUIRED)
+find_package(ament_index_cpp QUIET)
 
 if(ament_cmake_FOUND)
   find_package(behaviortree_cpp_v3 REQUIRED)
@@ -160,11 +160,10 @@ else()
 endif()
 
 if( ZMQ_FOUND )
-    SET(GROOT_DEPENDENCIES ${GROOT_DEPENDENCIES} zmq)
+    SET(GROOT_DEPENDENCIES ${GROOT_DEPENDENCIES} ${ZMQ_LIBRARIES})
 endif()
 
-target_link_libraries(behavior_tree_editor PRIVATE ${GROOT_DEPENDENCIES} PUBLIC Qt5::Widgets )
-
+target_link_libraries(behavior_tree_editor PUBLIC ${GROOT_DEPENDENCIES} Qt5::Widgets Qt5::Xml)
 
 add_executable(Groot ./bt_editor/main.cpp  ${RESOURCE_FILES})
 target_link_libraries(Groot PRIVATE behavior_tree_editor )
