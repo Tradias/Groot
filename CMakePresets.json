@@ -14,7 +14,10 @@
             "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "out",
-                "VCPKG_OVERLAY_TRIPLETS": "${sourceDir}/vcpkg/triplets/"
+                "VCPKG_OVERLAY_TRIPLETS": "${sourceDir}/vcpkg/triplets/",
+                "VCPKG_HOST_TRIPLET": "x64-linux-release",
+                "VCPKG_TARGET_TRIPLET": "x64-linux-release",
+                "BUILD_SHARED_LIBS": false
             }
         },
         {
@@ -59,6 +62,7 @@
                 "CMAKE_CXX_COMPILER": "cl",
                 "VCPKG_HOST_TRIPLET": "x64-windows-static-rel",
                 "VCPKG_TARGET_TRIPLET": "x64-windows-static-rel",
+                "CMAKE_POLICY_DEFAULT_CMP0091": "NEW",
                 "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreaded$<$<CONFIG:Debug>:Debug>",
                 "Boost_USE_STATIC_RUNTIME": "TRUE"
             }

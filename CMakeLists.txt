@@ -161,7 +161,11 @@ target_include_directories(behavior_tree_editor PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
 )
 
-SET(GROOT_DEPENDENCIES QtNodeEditor curses ncursesw tinfo )
+SET(GROOT_DEPENDENCIES QtNodeEditor )
+
+if(CURSES_FOUND)
+    list(APPEND GROOT_DEPENDENCIES ${CURSES_LIBRARIES} )
+endif()
 
 if(ament_cmake_FOUND)
     ament_target_dependencies(behavior_tree_editor ${dependencies})
