@@ -29,6 +29,9 @@ SidepanelEditor::SidepanelEditor(QtNodes::DataModelRegistry *registry,
     connect( ui->paletteTreeWidget, &QWidget::customContextMenuRequested,
              this, &SidepanelEditor::onContextMenu);
 
+    connect(ui->paletteTreeWidget, &QTreeWidget::itemDoubleClicked,
+            this, &SidepanelEditor::onDoubleClick);
+
     auto table_header = ui->portsTableWidget->horizontalHeader();
 
     table_header->setSectionResizeMode(0, QHeaderView::ResizeToContents);
@@ -89,7 +92,10 @@ void SidepanelEditor::updateTreeView()
       item->setFont(0, font);
       item->setData(0, Qt::UserRole, ID);
 
-      item->setTextColor(0, is_editable ? Qt::blue : Qt::black);
+      if (is_editable)
+      {
+        item->setForeground(0, QBrush(QColor(70, 110, 154)));
+      }
     }
 
     ui->paletteTreeWidget->expandAll();
@@ -458,4 +464,20 @@ void SidepanelEditor::on_buttonLock_toggled(bool locked)
 
     ui->buttonLock->setIcon( locked ? icon_locked : icon_unlocked);
     updateTreeView();
+}
+
+void SidepanelEditor::onDoubleClick(QTreeWidgetItem *item, int column)
+{
+    QString selected_name = item->text(0);
+
+    if( ui->buttonLock->isChecked() ||
+        BuiltinNodeModels().count( selected_name ) != 0 )
+    {
+        return;
+    }
+
+    if (item->parent() && item->parent()->text(0) == "SubTree")
+    {
+        emit setTabScope(selected_name);
+    }
 }
